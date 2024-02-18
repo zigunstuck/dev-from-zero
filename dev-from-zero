@@ -11,7 +11,11 @@ sudo chmod -R 777 ~/.ssh
 rsync -abviuzP home/ ~/
 
 git clone https://github.com/junegunn/fzf ~/.fzf
-~/.fzf/install -y
+~/.fzf/install --all
+
+git clone https://github.com/h-youhei/kakoune-surround ~/.kakoune-surround
+
+(cd /tmp/ && git clone https://github.com/nordtheme/xfce-terminal && cd xfce-terminal && ./install.sh)
 
 mkdir -p ~/.local/bin
 
