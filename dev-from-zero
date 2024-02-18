@@ -1,8 +1,11 @@
 #!/bin/bash
 sudo apt install git kakoune tmux -y
 
+git config --global user.name "Andreas Stocker"
+git config --global user.email "stoand@proton.me"
+
 sudo rm ~/.ssh -r
-sudo cp /var/.ssh/* ~/.ssh -r
+sudo cp /var/.ssh ~/.ssh -r
 sudo chmod -R 777 ~/.ssh
  
 rsync -abviuzP home/ ~/
