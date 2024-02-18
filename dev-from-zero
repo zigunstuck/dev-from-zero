@@ -7,6 +7,8 @@ git config --global user.email "stoand@proton.me"
 sudo rm ~/.ssh -r
 sudo cp /var/.ssh ~/.ssh -r
 sudo chmod -R 777 ~/.ssh
+
+# Merge home folder into user home
  
 rsync -abviuzP home/ ~/
 
