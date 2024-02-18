@@ -54,7 +54,7 @@ git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/theme
 
 cd
 
-bash -e "alacritty -e tmux new-session \; send-keys 'kak' C-m \; split-window -h \; resize-pane -R 20 \; last-pane \;" & disown
+~/.cargo/bin/alacritty -e tmux new-session \; send-keys 'kak' C-m \; split-window -h \; resize-pane -R 20 \; last-pane \; & disown
 
 exit
 
