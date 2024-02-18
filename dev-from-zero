@@ -11,7 +11,9 @@ chmod -R 700 ~/.ssh
 
 # Merge home folder into user home
  
-rsync -abviuzP home/ ~/
+(cd home && rsync -abvizP . ~/)
+
+source ~/.bashrc
 
 git clone https://github.com/junegunn/fzf ~/.fzf
 ~/.fzf/install --all
@@ -34,5 +36,4 @@ mkdir -p ~/.local/bin
 (cd /tmp/ && wget https://ziglang.org/builds/zig-linux-x86_64-0.12.0-dev.2805+79e99c401.tar.xz &&
     tar -xf zig-linux-x86_64-0.12.0-dev.2805+79e99c401.tar.xz && mv zig-linux-x86_64-0.12.0-dev.2805+79e99c401 ~/.zig)
 
-
-source ~/.bashrc
+(cd /tmp/ && git clone https://github.com/zigtools/zls && cd zls && zig build && cp zig-out/bin/zls ~/.local/bin)
