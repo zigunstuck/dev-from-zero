@@ -5,7 +5,6 @@ git config --global user.name "Andreas Stocker"
 git config --global user.email "stoand@proton.me"
 git config --global core.editor "kak"
 
-rm ~/.ssh -r
 cp /var/.ssh ~/.ssh -r
 chmod -R 700 ~/.ssh
 
@@ -36,4 +35,4 @@ mkdir -p ~/.local/bin
 (cd /tmp/ && wget https://ziglang.org/builds/zig-linux-x86_64-0.12.0-dev.2805+79e99c401.tar.xz &&
     tar -xf zig-linux-x86_64-0.12.0-dev.2805+79e99c401.tar.xz && mv zig-linux-x86_64-0.12.0-dev.2805+79e99c401 ~/.zig)
 
-(cd /tmp/ && git clone https://github.com/zigtools/zls && cd zls && zig build && cp zig-out/bin/zls ~/.local/bin)
+(cd /tmp/ && git clone https://github.com/zigtools/zls && cd zls && ~/.zig/zig build && cp zig-out/bin/zls ~/.local/bin)
