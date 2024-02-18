@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo apt install -y git curl wget kakoune tmux cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
+sudo apt install -y git curl rsync wget kakoune tmux cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
 
 git config --global user.name "Andreas Stocker"
 git config --global user.email "stoand@proton.me"
