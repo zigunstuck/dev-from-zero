@@ -19,7 +19,14 @@ git clone https://github.com/h-youhei/kakoune-surround ~/.kakoune-surround
 
 mkdir -p ~/.local/bin
 
+# Download Kakoune Language Server
+
 cd /tmp
 wget https://github.com/kakoune-lsp/kakoune-lsp/releases/download/v15.0.1/kak-lsp-v15.0.1-x86_64-unknown-linux-musl.tar.gz
 tar xzvf kak-lsp-v15.0.1-x86_64-unknown-linux-musl.tar.gz
 mv kak-lsp ~/.local/bin/
+
+# Download Zig
+
+(cd /tmp/ && wget https://ziglang.org/builds/zig-linux-x86_64-0.12.0-dev.2805+79e99c401.tar.xz &&
+    tar -xf zig-linux-x86_64-0.12.0-dev.2805+79e99c401.tar.xz && cp zig-linux-x86_64-0.12.0-dev.2805+79e99c401 ~/.zig)
