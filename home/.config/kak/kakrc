@@ -1,0 +1,224 @@
+hook global InsertChar k %{ try %{
+  exec -draft hH <a-k>jk<ret> d
+  exec <esc>
+}}
+
+set global tabstop 4
+set global indentwidth 4
+set global ui_options ncurses_assistant=off
+
+add-highlighter global/ show-matching
+
+map global normal X 'Jx'
+
+# Hook global write
+hook global NormalIdle .*(?!COMMIT_EDITMSG) write-all
+
+# Use ; to run commands
+map global normal ";" ":"
+
+# Git commit
+map global user a ':commit-if-valid-file<ret>' -docstring 'Commit all changes'
+define-command -hidden commit-if-valid-file %{
+    try %sh{
+        # a real file and not a git commit
+        if [ -f "$kak_bufname" ] || [ "$kak_opt_filetype" -ne "git-commit" ]; then 
+        	git add "$kak_bufname"
+        fi
+        git add -u
+    }
+    
+    git commit
+}
+
+# Comment
+map global user c ':comment-line<ret>' -docstring 'Comment'
+
+# Definition
+map global user d ':lsp-definition<ret>' -docstring 'LSP Definition'
+
+# Search
+map global user e ':grep %val{selection}<ret>' -docstring 'Search for selection'
+
+# Format
+map global user f ':lsp-formatting-sync<ret>' -docstring 'LSP Format'
+
+# Git Diff current
+map global user g ':git diff HEAD -- %val{bufname}<ret>' -docstring 'Git Diff current'
+
+# Git commit current file
+map global user G ':git-reset; git add %val{bufname}; git commit<ret>' -docstring 'Commit current file'
+define-command -hidden git-reset %{ try %sh{ git reset } }
+
+# LSP Diagnostics
+map global user h ':lsp-diagnostics<ret>' -docstring 'LSP Diagnostics'
+
+# Git Diff
+map global user i ':git diff HEAD<ret>' -docstring 'Git Diff'
+
+map global user j ':fzf-edit<ret>' -docstring 'Fuzzy find git file'
+
+map global user k ':fzf-buffer<ret>' -docstring 'Fuzzy find buffer'
+
+map global user l ':fzf-project<ret>' -docstring 'Fuzzy find project in home directory'
+
+map global user m ':lsp-code-actions<ret>' -docstring 'LSP Actions'
+
+map global user t ':git log<ret>' -docstring 'Git Log'
+map global user T ':git log %val{bufname}<ret>' -docstring 'Git Log Current File'
+
+map global user o ':fzf-branch<ret>' -docstring 'Fuzzy find branch'
+
+# Paste
+map global user p '<a-!>xsel --output --clipboard<ret>' -docstring 'Paste'
+
+# References
+map global user r ':lsp-references<ret>' -docstring 'LSP References'
+
+# Restart LSP
+map global user R ':lsp-stop<ret>:lsp-start<ret>' -docstring 'LSP Restart'
+
+map global user s ':surround<ret><b>' -docstring 'Surround ()'
+map global user S ':delete-surround<ret><b>' -docstring 'Unsurround ()'
+
+# Quit
+map global user q ':waq<ret>' -docstring 'Write and Quit'
+
+# Write
+map global user w ':wa<ret>' -docstring 'Write'
+
+# Copy
+hook global NormalKey y|d|c %{ nop %sh{
+  printf %s "$kak_main_reg_dquote" | xsel --input --clipboard
+}}
+
+# Git Move
+define-command -docstring 'Git Move' -params 1 gm %{
+    try %sh{
+    	git add "$kak_bufname"
+    	git mv "$kak_bufname" "$1"
+    }
+
+    delete-buffer!
+    edit! %arg{1}
+    write
+}
+
+# Git Delete
+define-command -docstring 'Git Delete' -params 0 gd %{
+    try %sh{
+        git rm "$kak_bufname" -f
+    }
+    
+    delete-buffer!
+}
+
+# Fuzzy Find File
+define-command -docstring 'Invoke fzf to open a file' -params 0 fzf-edit %{
+    evaluate-commands %sh{
+        if [ -z "${kak_client_env_TMUX}" ]; then
+            printf 'fail "client was not started under tmux"\n'
+        else
+            file="$(git ls-files --recurse-submodules |TMUX="${kak_client_env_TMUX}" fzf-tmux -d 15)"
+            if [ -n "$file" ]; then
+                printf 'edit "%s"\n' "$file"
+            fi
+        fi
+    }
+}
+
+# Fuzzy Find Project
+define-command -docstring 'Invoke fzf to open a project in the home directory' -params 0 fzf-project %{
+    evaluate-commands %sh{
+        if [ -z "${kak_client_env_TMUX}" ]; then
+            printf 'fail "client was not started under tmux"\n'
+        else
+            dir="$(ls ~/ |TMUX="${kak_client_env_TMUX}" fzf-tmux -d 15)"
+            if [ -n "$dir" ]; then
+            	# Change default tmux directory when splitting panes
+                tmux attach -t "$(tmux display-message -p '#S')" -c "$HOME/$dir"
+                printf 'cd "~/%s"\n' "$dir"
+            fi
+        fi
+    }
+}
+
+# Fuzzy Find Buffer
+define-command -docstring 'Invoke fzf to select a buffer' fzf-buffer %{
+    evaluate-commands %sh{
+        BUFFER=$(
+            (
+                eval "set -- $kak_buflist"
+                while [ $# -gt 0 ]; do
+                    printf "%s\0" "$1"
+                    shift
+                done
+            ) |
+            fzf-tmux -d 15 --read0
+        )
+        if [ -n "$BUFFER" ]; then
+            printf 'buffer "%s"\n' "${BUFFER}"
+        fi
+    }
+}
+
+# Fuzzy Find Branch
+define-command -docstring 'Invoke fzf to checkout a branch' -params 0 fzf-branch %{
+    evaluate-commands %sh{
+        if [ -z "${kak_client_env_TMUX}" ]; then
+            printf 'fail "client was not started under tmux"\n'
+        else
+            branch="$(git branch --format='%(refname:short)' -a |TMUX="${kak_client_env_TMUX}" fzf-tmux -d 15)"
+            if [ -n "$branch" ]; then
+                printf 'git checkout "%s"\n' "$branch"
+            fi
+        fi
+    }
+}
+
+
+# Adapted from the smarttab plugin
+hook global InsertDelete ' ' %{ try %sh{
+    if [ $kak_opt_tabstop -gt 1 ]; then
+       printf "%s\n" 'execute-keys -draft "<a-h><a-k>^\h+.\z<ret>I<space><esc><lt>"'
+    fi
+    } catch %{ try %{
+        execute-keys -itersel -draft "h%opt{tabstop}<s-h>2<s-l>s\h+\z<ret>d"
+    }
+}}
+
+# Abort commit
+hook global WinSetOption filetype=git-commit %{
+	map buffer normal <esc> ':delete-buffer!<ret>';
+}
+
+source ~/.kakoune-surround/surround.kak
+
+hook global BufCreate .* %{
+    hook -group tabs-to-spaces buffer InsertChar \t %{ try %{
+      execute-keys -draft "h<a-h><a-k>\A\h+\z<ret><a-;>;%opt{indentwidth}@"
+    }}
+}
+
+hook global BufSetOption filetype=makefile %{
+    remove-hooks buffer tabs-to-spaces
+}
+
+# Use Ripgrep instead of Grep
+set-option global grepcmd 'rg -Hn --no-heading'
+
+eval %sh{kak-lsp --kakoune -s $kak_session}
+lsp-enable
+lsp-auto-hover-enable
+
+def -override -hidden lsp-show-error -params 1 -docstring "Render error" %{
+    echo -debug "kak-lsp:" %arg{1}
+}
+
+set global lsp_cmd "kak-lsp -s %val{session} -vvv --log /tmp/kak-lsp.log"
+
+define-command gad %{ git add . } -docstring 'Git add Current Dir'
+define-command gam %{ git commit --ammend } -docstring 'Git Commit Ammend'
+define-command gr %{ nop %sh{ git stash -- "$kak_bufname" }; edit! %val{bufname} } -docstring 'Git Reset Current Buffer (Stash)'
+
+set global ui_options 'terminal_assistant=off'

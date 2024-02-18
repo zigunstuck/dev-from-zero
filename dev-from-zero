@@ -4,11 +4,11 @@ sudo apt install git kakoune tmux -y
 sudo rm ~/.ssh -r
 sudo cp /var/.ssh/* ~/.ssh -r
 sudo chmod -R 777 ~/.ssh
-
-cp home_configs/* ~/
+ 
+rsync -abviuzP home/ ~/
 
 git clone https://github.com/junegunn/fzf ~/.fzf
-~/.fzf/install
+~/.fzf/install -y
 
 mkdir -p ~/.local/bin
 
