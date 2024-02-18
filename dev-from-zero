@@ -21,9 +21,12 @@ git clone https://github.com/junegunn/fzf ~/.fzf
 
 git clone https://github.com/h-youhei/kakoune-surround ~/.kakoune-surround
 
-(cd /tmp/ && git clone https://github.com/nordtheme/xfce-terminal && cd xfce-terminal && ./install.sh)
-
 mkdir -p ~/.local/bin
+
+# Download Alacritty Themes
+
+mkdir -p ~/.config/alacritty/themes
+git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes
 
 # Download Kakoune Language Server
 
@@ -38,10 +41,6 @@ mkdir -p ~/.local/bin
     tar -xf zig-linux-x86_64-0.12.0-dev.2805+79e99c401.tar.xz && mv zig-linux-x86_64-0.12.0-dev.2805+79e99c401 ~/.zig)
 
 (cd /tmp/ && git clone https://github.com/zigtools/zls && cd zls && ~/.zig/zig build && cp zig-out/bin/zls ~/.local/bin)
-
-# Trigger Color Scheme Change
-
-cp home/.config/xfce4/terminal/terminalrc ~/.config/xfce4/terminal/
 
 cd
 
