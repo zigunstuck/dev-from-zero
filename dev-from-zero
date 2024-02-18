@@ -11,7 +11,7 @@ chmod -R 700 ~/.ssh
 
 # Merge home folder into user home
  
-(cd home && rsync -abvizP . ~/)
+(cd home && rsync -a . ~/)
 
 source ~/.bashrc
 
