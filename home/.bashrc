@@ -147,7 +147,7 @@ alias add-remote="git remote set-url --add origin "
 alias as='art serve'
 alias ed="kak"
 alias ph="python3 -m http.server"
-. "$HOME/.cargo/env"
+# . "$HOME/.cargo/env"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
