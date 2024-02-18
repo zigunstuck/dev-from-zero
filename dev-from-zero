@@ -1,0 +1,8 @@
+#!/bin/bash
+sudo apt install git tmux
+sudo cp /var/.ssh ~/.ssh -r
+sudo chmod -R 777 ~/.ssh
+cp home_configs/* ~/
+
+git clone https://github.com/junegunn/fzf ~/.fzf
+~/.fzf/install
