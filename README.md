@@ -1,6 +1,6 @@
 # My fully self contained dev environment
 
-Designed to be run with containers can start fresh for every run.
+Designed to be run with containers that can start fresh for every run.
 
 Running:
 
