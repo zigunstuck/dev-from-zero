@@ -5,3 +5,7 @@ Designed to be run with containers can start fresh for every run.
 Running:
 
 `git clone https://github.com/zigunstuck/dev-from-zero && cd dev-from-zero && ./dev-from-zero`
+
+SSH Keys:
+
+These are currently copied from the `/var/.ssh` dir. If you don't have this, use `ssh-keygen`.
