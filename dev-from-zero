@@ -4,6 +4,7 @@ sudo apt install git kakoune tmux -y
 git config --global user.name "Andreas Stocker"
 git config --global user.email "stoand@proton.me"
 git config --global core.editor "kak"
+git config --global init.defaultBranch "main"
 
 cp /var/.ssh ~/.ssh -r
 chmod -R 700 ~/.ssh
