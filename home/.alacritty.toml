@@ -3,3 +3,5 @@ import = [
 ]
 
 font.size = 15
+
+window.startup_mode = "Fullscreen"

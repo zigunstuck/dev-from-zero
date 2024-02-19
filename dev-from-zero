@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 sudo apt install -y git curl rsync wget kakoune tmux cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
 
 git config --global user.name "Andreas Stocker"
 git config --global user.email "stoand@proton.me"
 git config --global core.editor "kak"
 git config --global init.defaultBranch "main"
-
-cp /var/.ssh ~/.ssh -r
-chmod -R 700 ~/.ssh
 
 # Merge home folder into user home
  
@@ -56,4 +56,4 @@ cd
 
 ~/.cargo/bin/alacritty -e tmux new-session \; send-keys 'kak' C-m \; split-window -h \; resize-pane -R 20 \; last-pane \; & disown
 
-kill -9 $PPID
+sleep 3 && kill -9 $PPID
