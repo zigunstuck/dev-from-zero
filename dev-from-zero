@@ -56,5 +56,4 @@ cd
 
 ~/.cargo/bin/alacritty -e tmux new-session \; send-keys 'kak' C-m \; split-window -h \; resize-pane -R 20 \; last-pane \; & disown
 
-exit
-
+kill -9 $PPID
